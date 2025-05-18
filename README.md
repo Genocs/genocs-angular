@@ -50,19 +50,19 @@ Follow these steps to build, create the docker image and put it on Container Reg
    ``` bash
    npm install
    npm run start
-   docker build -t <acr-name>.azurecr.io/web.portal.local:1.0.0 -t <acr-name>.azurecr.io/web.portal.local:latest -f ./Dockerfile .
+   docker build -t <acr-name>.azurecr.io/web.portal:1.0.0 -t <acr-name>.azurecr.io/web.portal:latest -f ./Dockerfile .
 
    az acr login --name <acr-name>
-   docker push <acr-name>.azurecr.io/web.portal.local:1.0.0
-   docker push <acr-name>.azurecr.io/web.portal.local:latest
+   docker push <acr-name>.azurecr.io/web.portal:1.0.0
+   docker push <acr-name>.azurecr.io/web.portal:latest
    ```
 
    ``` bash
    # To build the Image locally, ready to be pushed to the docker registry
-   docker build -t genocs/web.portal.local:1.0.0 -t genocs/web.portal.local:latest -f ./Dockerfile --build-arg BUILD_ENV=dev .
+   docker build -t genocs/web.portal:1.0.0 -t genocs/web.portal:latest -f ./Dockerfile --build-arg BUILD_ENV=dev .
 
-   docker push genocs/web.portal.local:1.0.0
-   docker push genocs/web.portal.local:latest
+   docker push genocs/web.portal:1.0.0
+   docker push genocs/web.portal:latest
    ```   
 
   there is even an option to the image locally
@@ -70,9 +70,9 @@ Follow these steps to build, create the docker image and put it on Container Reg
   ```bash
   npm install
   npm run start
-  docker build -t web.portal.local . -f ./Dockerfile.local
-  docker tag web.portal.local <acr-name>.azurecr.io/web.portal.local
-  docker push <acr-name>.azurecr.io/web.portal.local
+  docker build -t web.portal . -f ./Dockerfile.local
+  docker tag web.portal <acr-name>.azurecr.io/web.portal
+  docker push <acr-name>.azurecr.io/web.portal
   ``` 
 
   ```bash

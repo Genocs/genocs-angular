@@ -1,0 +1,50 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting .NET9.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+# *** Pipeline variables ***
+# buildEnv - Environment to build the image for (local | dev | uat | prod)
+
+name: $(Build.BuildId)
+
+trigger:
+  - none
+
+resources:
+  - repo: self
+
+variables:
+  vmImageName: "ubuntu-latest" # Agent VM image name
+  imageName: web.portal # Your image name
+  dockerfile: Dockerfile # Your Dockerfile path
+
+stages:
+  - stage: BuildAndPush
+    displayName: Build and Push Docker Image
+    jobs:
+      - job: BuildAndPush
+        displayName: Build Image
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - task: Docker@2
+            displayName: Build
+            inputs:
+              command: build
+              repository: $(imageName)
+              tags: "$(Build.BuildId),latest" # Use build number as tag
+              dockerfile: $(dockerfile)             
+              context: .  # set the context to the root of the repository
+              buildArgs: "--build-arg BUILD_ENV=dev" # Pass the the build argument
+              containerRegistry: "AcrDevelopmentConnection" # Your ACR service connection name
+
+          - task: Docker@2
+            displayName: Push On Acr
+            inputs:
+              command: push
+              repository: $(imageName)
+              tags: "$(Build.BuildId),latest" # Use build number as tag
+              containerRegistry: "AcrDevelopmentConnection" # Your ACR service connection name
+
+      
