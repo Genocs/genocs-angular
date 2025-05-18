@@ -57,6 +57,14 @@ Follow these steps to build, create the docker image and put it on Container Reg
    docker push <acr-name>.azurecr.io/web.portal.local:latest
    ```
 
+   ``` bash
+   # To build the Image locally, ready to be pushed to the docker registry
+   docker build -t genocs/web.portal.local:1.0.0 -t genocs/web.portal.local:latest -f ./Dockerfile --build-arg BUILD_ENV=dev .
+
+   docker push genocs/web.portal.local:1.0.0
+   docker push genocs/web.portal.local:latest
+   ```   
+
   there is even an option to the image locally
 
   ```bash

@@ -22,7 +22,7 @@ COPY . .
 ARG BUILD_ENV=dev
 
 # Build the app in dev mode. Remember to add a parameter to the dockerfile to build in production mode
-RUN npm run build:${BUILD_ENV}
+RUN npm run build -c ${BUILD_ENV}
 
 # If you are building your code for production
 # RUN npm ci --only=production
