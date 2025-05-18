@@ -3,9 +3,11 @@
 This project is a web portal built using Angular. It serves as a front-end application for various functionalities and features.
 The project is designed to be modular and scalable, allowing for easy integration with back-end services and APIs.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.0.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
 
 ## Table of Contents
+
+# MsalAngularTutorial
 
 
 ## Development server

@@ -5,7 +5,6 @@
 /tmp
 /out-tsc
 /bazel-out
-/.vs
 
 # Node
 /node_modules
@@ -44,6 +43,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-/.vs
-/.vs/slnx.sqlite

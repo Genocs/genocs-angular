@@ -3,15 +3,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "tslib" : ["./node_modules/tslib/tslib.d.ts"] //https://github.com/microsoft/TypeScript/issues/37991#issuecomment-629944853
-    },
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": false,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -24,15 +16,9 @@
     "lib": [
       "ES2022",
       "dom"
-    ],
-    "strictPropertyInitialization": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    ]
   },
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "enableI18nLegacyMessageIdFormat": false
   }
 }
