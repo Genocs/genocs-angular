@@ -1,0 +1,95 @@
+parameters:
+  # Dev environment parameters
+  - name: devBuildCommand
+    type: string
+  - name: devResourceGroupName
+    type: string
+  - name: devAppName
+    type: string
+  - name: devSlotName
+    type: string
+    default: ""
+
+  # UAT environment parameters
+  - name: uatBuildCommand
+    type: string
+  - name: uatResourceGroupName
+    type: string
+  - name: uatAppName
+    type: string
+  - name: uatSlotName
+    type: string
+    default: ""
+
+  # Production environment parameters
+  - name: prodBuildCommand
+    type: string
+
+  # # Default parameters
+  - name: devEnvironmentName
+    type: string
+    default: "Dev"
+  - name: devServiceConnectionName
+    type: string
+    default: "Azure Dev"
+  - name: uatEnvironmentName
+    type: string
+    default: "Uat"
+  - name: uatServiceConnectionName
+    type: string
+    default: "Azure Dev" 
+
+stages:
+  - stage: build_dev_stage
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/Develop')
+    displayName: "Build projects"
+    jobs:
+      - template: ci-pipeline.yml
+        parameters:
+          buildCommand: ${{ parameters.devBuildCommand }}
+
+  - stage: deploy_dev_stage
+    dependsOn: build_dev_stage
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/Develop'))
+    displayName: "Deploy on Dev environment"
+    jobs:
+      - template: cd-pipeline.yml
+        parameters:
+          environmentName: ${{ parameters.devEnvironmentName }}
+          serviceConnectionName: ${{ parameters.devServiceConnectionName }}
+          resourceGroupName: ${{ parameters.devResourceGroupName }}
+          appName: ${{ parameters.devAppName }}
+          slotName: ${{ parameters.devSlotName }}
+
+  - stage: build_uat_stage
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    displayName: "Build projects for UAT environment"
+    jobs:
+      - template: ci-pipeline.yml
+        parameters:
+          buildCommand: ${{ parameters.uatBuildCommand }}
+
+  - stage: deploy_uat_stage
+    dependsOn: build_uat_stage
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    displayName: "Deploy on UAT environment"
+    jobs:
+      - template: cd-pipeline.yml
+        parameters:
+          environmentName: ${{ parameters.uatEnvironmentName }}
+          serviceConnectionName: ${{ parameters.uatServiceConnectionName }}
+          resourceGroupName: ${{ parameters.uatResourceGroupName }}
+          appName: ${{ parameters.uatAppName }}
+          slotName: ${{ parameters.uatSlotName }}
+
+  - stage: build_prod_stage
+    variables:
+      artifactName: 'productionArtdrop'
+    dependsOn: build_uat_stage
+    condition:  eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    displayName: 'Build projects for production environment'
+    jobs:
+    - template: ci-pipeline.yml
+      parameters:
+        buildCommand: ${{ parameters.prodBuildCommand }}
+        artifactName: ${{ variables.artifactName }}

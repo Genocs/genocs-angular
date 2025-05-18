@@ -1,0 +1,60 @@
+parameters:
+  - name: environmentName
+    type: string
+  - name: serviceConnectionName
+    type: string
+  - name: resourceGroupName
+    type: string
+  - name: appName
+    type: string
+  - name: slotName
+    type: string
+    default: ""
+  - name: artifactName
+    type: string
+    default: "publishArtifactDrop"
+  - name: vmImageName
+    type: string
+    default: "windows-latest"
+
+jobs:
+  - deployment: ${{ parameters.environmentName }}
+    displayName: "Deploy on web app"
+    environment: ${{ parameters.environmentName }}
+    pool:
+      vmImage: ${{ parameters.vmImageName }}
+    variables:
+      isSlotDeployment: $[ne('${{ parameters.slotName }}', '')]
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: DownloadBuildArtifacts@1
+              displayName: "Download current build artifact"
+              inputs:
+                buildType: "current"
+                downloadType: "single"
+                artifactName: ${{ parameters.artifactName }}
+                downloadPath: "$(System.ArtifactsDirectory)"
+
+            - task: AzureWebApp@1
+              displayName: "Azure Web App Slot deployment"
+              inputs:
+                appType: "webApp"
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                resourceGroupName: ${{ parameters.resourceGroupName }}
+                appName: ${{ parameters.appName }}
+                deployToSlotOrASE: true
+                slotName: ${{ parameters.slotName }}
+                package: "$(System.ArtifactsDirectory)/**/*.zip"
+                runtimeStack: "NODE|18-lts"
+
+            - task: AzureAppServiceManage@0
+              condition: eq(variables.isSlotDeployment, true)
+              displayName: "Swap warmed slot"
+              inputs:
+                Action: "Swap Slots"
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                ResourceGroupName: ${{ parameters.resourceGroupName }}
+                WebAppName: ${{ parameters.appName }}
+                SourceSlot: ${{ parameters.slotName }}

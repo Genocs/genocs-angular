@@ -1,0 +1,36 @@
+trigger:
+  - Develop
+  - main
+
+pr:
+  - Develop
+  - main
+
+variables:
+  # Dev environment variables
+  devBuildCommand: "build:dev"
+  devResourceGroupName: "RG-SC-BusinessLayer-Dev"
+  devAppName: "app-sc-fe-dev"
+
+  # UAT environment variables
+  uatBuildCommand: "build:uat"
+  uatResourceGroupName: "RG-SC-BusinessLayer-Uat"
+  uatAppName: "app-sc-fe-uat"
+
+  # Prod environment variables
+  prodBuildCommand: "build:prod"
+  prodResourceGroupName: "RG-SC-BusinessLayer-Prod"
+  prodAppName: "app-sc-fe-prod"  
+
+stages:
+  - template: templates/default-pipeline.yml
+    parameters:
+      devBuildCommand: ${{ variables.devBuildCommand }}
+      devResourceGroupName: ${{ variables.devResourceGroupName }}
+      devAppName: ${{ variables.devAppName }}
+
+      uatBuildCommand: ${{ variables.uatBuildCommand }}
+      uatResourceGroupName: ${{ variables.uatResourceGroupName }}
+      uatAppName: ${{ variables.uatAppName }}
+
+      prodBuildCommand: ${{ variables.prodBuildCommand }}     
