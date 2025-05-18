@@ -49,7 +49,7 @@ Follow these steps to build, create the docker image and put it on Container Reg
 2. How to build, create the docker image and push it on Container Registry (Manually)
    ``` bash
    npm install
-   npm run build:dev
+   npm run start
    docker build -t <acr-name>.azurecr.io/web.portal.local:1.0.0 -t <acr-name>.azurecr.io/web.portal.local:latest -f ./Dockerfile .
 
    az acr login --name <acr-name>
@@ -61,7 +61,7 @@ Follow these steps to build, create the docker image and put it on Container Reg
 
   ```bash
   npm install
-  npm run build:dev
+  npm run start
   docker build -t web.portal.local . -f ./Dockerfile.local
   docker tag web.portal.local <acr-name>.azurecr.io/web.portal.local
   docker push <acr-name>.azurecr.io/web.portal.local
